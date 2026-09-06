@@ -1,98 +1,81 @@
 # Home-Automation-System-with-IOT
 
-# AIM: 
-  To make the in-built LED ON / OFF using Arduino UNO R4 WiFi board, IFTT Google Assistance and Blynk IoT mobile application.          
-           
-# COMPONENTS REQUIRED:
+## AIM:
+
+To interface an LED with a Raspberry Pi Pico and write a MicroPython program to blink the LED at regular time intervals using the Wokwi online simulator.
+
+## COMPONENTS REQUIRED:
 PC/Laptop with Internet connection
-Arduino UNO R4 WiFi board
-USB cable compatible with Arduino UNO R4 WiFi
-Wi-Fi connection (mobile hotspot or Wi-Fi router)
-Mobile phone with Blynk IoT app installed
-Arduino IDE
-Blynk account
-Built-in LED of Arduino UNO R4 WiFi
+Wokwi Online Simulator
+Raspberry Pi Pico
+LED
+220 Ω Resistor
+Jumper Wires
+MicroPython Programming Environment
 
-## Theory: 
-Blynk is an IoT platform that allows microcontroller boards to be controlled and monitored through a mobile application over the Internet. It provides a graphical interface using widgets such as buttons, switches, displays, and gauges.
+## THEORY:
 
-In this experiment, the Arduino UNO R4 WiFi is connected to a Wi-Fi network and linked to the Blynk IoT platform. A button widget in the Blynk mobile application is used to control the built-in LED of the Arduino UNO R4 WiFi remotely.
+The Raspberry Pi Pico is a low-cost microcontroller development board based on the RP2040 microcontroller. It provides several General-Purpose Input/Output (GPIO) pins that can be configured as either input or output.
 
-When the button in the Blynk application is switched ON, a command is sent through the Internet to the Arduino UNO R4 WiFi, causing its built-in LED to turn ON. When the button is switched OFF, the command is sent to the board and the LED turns OFF.
+An LED (Light Emitting Diode) is an electronic component that produces light when current flows through it in the forward direction. Since excessive current can damage an LED, a current-limiting resistor is connected in series with the LED.
 
-The Arduino UNO R4 WiFi has built-in Wi-Fi connectivity, so no external Wi-Fi module such as ESP8266 is required. Since the experiment uses the built-in LED, no external relay or AC bulb is required.
-# PROCEDURE:
+In this experiment, the LED is connected to one of the GPIO pins of the Raspberry Pi Pico. The GPIO pin is configured as an output using MicroPython. When the GPIO pin is set to HIGH, voltage is applied to the LED and it turns ON. When the GPIO pin is set to LOW, the LED turns OFF.
 
-Connect the Arduino UNO R4 WiFi to the PC/laptop using a suitable USB cable.
-Install and open Arduino IDE on the computer.
-Install/select the Arduino UNO R4 WiFi board from the Arduino board package.
-Install the Blynk library in Arduino IDE.
-Download and install the Blynk IoT application on the mobile phone and create/login to a Blynk account.
-Create a new Blynk template/device and add a Button widget.
-Configure the button as a switch and assign a virtual datastream, such as V0.
-Configure the Wi-Fi SSID and password in the Arduino program along with the required Blynk authentication details.
-In the Arduino program, configure the built-in LED as the output and associate the Blynk button with the LED control.
-Select Arduino UNO R4 WiFi as the board and select the appropriate COM port.
-Compile and upload the program to the Arduino UNO R4 WiFi.
-Connect the Arduino UNO R4 WiFi to the Internet through a Wi-Fi network or mobile hotspot.
-Open the Blynk application on the mobile phone.
-Press the ON button in the Blynk application. The command is sent through the Internet to the Arduino UNO R4 WiFi, and the built-in LED turns ON.
-Press the OFF button. The Arduino receives the command and the built-in LED turns OFF.
-Thus, the built-in LED of the Arduino UNO R4 WiFi is successfully controlled remotely using the Blynk IoT application.
+The Pin class from the machine module is used to configure and control the GPIO pin. The sleep() function from the utime module introduces a delay between the ON and OFF states. By continuously switching the GPIO pin between HIGH and LOW, the LED blinks at a regular interval.
 
+Wokwi is an online electronics simulator that allows microcontroller circuits and programs to be designed and tested virtually without requiring physical hardware. It can simulate Raspberry Pi Pico, LEDs, sensors and other electronic components.
+
+## PROCEDURE:
+
+1. Open the Wokwi online simulator and create a new Raspberry Pi Pico project.
+
+2. Place a Raspberry Pi Pico, LED, and 220 Ω resistor in the simulation workspace.
+
+3. Connect the GPIO pin GP5 of the Raspberry Pi Pico to the anode (positive terminal) of the LED through the 220 Ω resistor.
+
+4. Connect the cathode (negative terminal) of the LED to the GND pin of the Raspberry Pi Pico.
+
+5. Select MicroPython as the programming language.
+
+6. Write the MicroPython program to configure GP5 as an output pin.
+
+7. Use the `toggle()` function to alternately switch the LED between ON and OFF states.
+
+8. Use the `sleep()` function to provide a delay of 0.5 seconds between each state.
+
+9. Start the simulation using the Run button.
+
+10. Observe that the LED continuously turns ON and OFF at regular intervals.
+
+11. Verify that the LED blinks continuously as long as the simulation is running.
 # CIRCUIT DIAGRAM:
 
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/707cbbff-a867-45bf-92d3-786a3244d2ab" />
-
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/57082b36-7da7-4308-a0f5-63bd17287491" />
 
 
  
 # PROGRAM:
 ```
-#define BLYNK_TEMPLATE_ID "TMPL3FC5OeIaF"
-#define BLYNK_TEMPLATE_NAME "LED Control"
-#define BLYNK_AUTH_TOKEN "YOUR_NEW_AUTH_TOKEN"
+from machine import Pin
+from utime import sleep
 
-#define BLYNK_PRINT Serial
+sleep(0.01)  # Wait for USB to connect
+print("Hello, Pi Pico!")
 
-#include <WiFiS3.h>
-#include <BlynkSimpleWifi.h>
+led = Pin(5, Pin.OUT)
 
-char ssid[] = "YOUR_WIFI_NAME";
-char pass[] = "YOUR_WIFI_PASSWORD";
-
-BLYNK_WRITE(V0)
-{
-  int value = param.asInt();
-  digitalWrite(LED_BUILTIN, value);
-}
-
-void setup()
-{
-  Serial.begin(115200);
-
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW);
-
-  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
-}
-
-void loop()
-{
-  Blynk.run();
-}
+while True:
+    led.toggle()
+    sleep(0.5)
  ```
 # Output:
 
-<img width="358" height="531" alt="image" src="https://github.com/user-attachments/assets/5519f1f6-9539-4550-8b3e-6b877163decb" />
+<img width="1906" height="871" alt="image" src="https://github.com/user-attachments/assets/c3edfe91-d9df-425b-b539-1b2d3959c5ac" />
 
-
-
-<img width="358" height="501" alt="image" src="https://github.com/user-attachments/assets/e8798410-e52b-4d82-8a71-669dcbc19faf" />
 
 
 ## Result:
-The Arduino UNO R4 WiFi built-in LED was successfully controlled remotely using the Blynk IoT application. When the Blynk button was switched ON, the built-in LED turned ON, and when switched OFF, the LED turned OFF successfully.
+The Raspberry Pi Pico LED blinking experiment was successfully implemented and simulated using Wokwi.
 
 
 
